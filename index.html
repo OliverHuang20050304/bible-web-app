@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>純淨聖經閱讀器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="toolbar">
+        <div class="toolbar-row">
+            <button id="btn-prev-chapter" aria-label="上一章">上一章</button>
+            <select id="book-select" aria-label="選擇書卷"></select>
+            <select id="chapter-select" aria-label="選擇章節"></select>
+            <button id="btn-next-chapter" aria-label="下一章">下一章</button>
+        </div>
+        <div class="toolbar-row">
+            <button id="btn-font-minus" aria-label="縮小字體">A-</button>
+            <button id="btn-font-plus" aria-label="放大字體">A+</button>
+            <button id="btn-resume" aria-label="回到上次閱讀位置">回到上次</button>
+            <button id="btn-theme" aria-label="切換日夜模式">日/夜</button>
+        </div>
+        <div class="toolbar-row">
+            <input id="search-input" type="search" placeholder="快速搜尋經文，例如：愛、信心、耶穌" aria-label="快速搜尋經文">
+            <button id="btn-search" aria-label="搜尋經文">搜尋</button>
+        </div>
+    </header>
+
+    <main id="bible-content" class="content-container">
+        <h1 id="chapter-title">資料載入中...</h1>
+        <section id="search-results" class="search-results hidden" aria-live="polite"></section>
+        <div id="verses">
+            如果一直看到這行字，請按鍵盤 F12 切換到 Console 檢查錯誤！
+        </div>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
