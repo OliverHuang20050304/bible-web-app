@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" data-theme="light" data-palette="default">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,6 +19,16 @@
             <button id="btn-font-plus" aria-label="放大字體">A+</button>
             <button id="btn-resume" aria-label="回到上次閱讀位置">回到上次</button>
             <button id="btn-theme" aria-label="切換日夜模式">日/夜</button>
+        </div>
+        <div class="toolbar-row toolbar-row-palette">
+            <select id="palette-select" aria-label="配色主題">
+                <option value="default">預設藍</option>
+                <option value="wine">酒紅</option>
+                <option value="teal">青綠</option>
+                <option value="amber">琥珀</option>
+                <option value="violet">紫羅蘭</option>
+                <option value="forest">墨綠</option>
+            </select>
         </div>
         <div class="toolbar-row">
             <input id="search-input" type="search" placeholder="快速搜尋經文，例如：愛、信心、耶穌" aria-label="快速搜尋經文">

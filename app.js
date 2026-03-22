@@ -1,7 +1,10 @@
+const VALID_PALETTES = ["default", "wine", "teal", "amber", "violet", "forest"];
+
 const BibleApp = {
-    storageKey: "bibleAppState_v4",
+    storageKey: "bibleAppState_v5",
     state: {
         theme: "light",
+        palette: "default",
         fontSize: 18,
         lastRead: {
             bid: 1,
@@ -27,7 +30,19 @@ const BibleApp = {
 
     loadSettings() {
         try {
-            const savedData = localStorage.getItem(this.storageKey);
+            let savedData = localStorage.getItem(this.storageKey);
+            if (!savedData) {
+                const legacyKey = "bibleAppState_v4";
+                const legacyData = localStorage.getItem(legacyKey);
+                if (legacyData) {
+                    savedData = legacyData;
+                    try {
+                        localStorage.setItem(this.storageKey, legacyData);
+                    } catch {
+                        /* ignore quota */
+                    }
+                }
+            }
             if (!savedData) return;
             const parsed = JSON.parse(savedData);
             this.state = {
@@ -36,6 +51,9 @@ const BibleApp = {
                 lastRead: { ...this.state.lastRead, ...parsed.lastRead },
                 resumePoint: { ...this.state.resumePoint, ...parsed.resumePoint }
             };
+            if (!VALID_PALETTES.includes(this.state.palette)) {
+                this.state.palette = "default";
+            }
         } catch (error) {
             console.error("讀取設定失敗:", error);
         }
@@ -57,6 +75,10 @@ const BibleApp = {
         document.getElementById("btn-prev-chapter")?.addEventListener("click", () => this.goChapter(-1));
         document.getElementById("btn-next-chapter")?.addEventListener("click", () => this.goChapter(1));
         document.getElementById("btn-resume")?.addEventListener("click", () => this.resumeReading());
+
+        document.getElementById("palette-select")?.addEventListener("change", (event) => {
+            this.setPalette(event.target.value);
+        });
 
         bookSelect?.addEventListener("change", (event) => {
             this.selectBook(Number(event.target.value));
@@ -94,6 +116,10 @@ const BibleApp = {
         if (!validBids.has(Number(this.state.resumePoint.bid))) {
             this.state.resumePoint = { ...this.state.lastRead };
         }
+
+        if (!VALID_PALETTES.includes(this.state.palette)) {
+            this.state.palette = "default";
+        }
     },
 
     renderSelectors() {
@@ -128,7 +154,17 @@ const BibleApp = {
 
     applySettings() {
         document.documentElement.setAttribute("data-theme", this.state.theme);
+        document.documentElement.setAttribute("data-palette", this.state.palette || "default");
         document.documentElement.style.setProperty("--base-font-size", `${this.state.fontSize}px`);
+        const paletteSelect = document.getElementById("palette-select");
+        if (paletteSelect) paletteSelect.value = this.state.palette || "default";
+    },
+
+    setPalette(palette) {
+        if (!VALID_PALETTES.includes(palette)) return;
+        this.state.palette = palette;
+        this.applySettings();
+        this.saveSettings();
     },
 
     toggleTheme() {

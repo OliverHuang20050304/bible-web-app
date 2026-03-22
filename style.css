@@ -1,20 +1,117 @@
-/* 定義全域變數 (類似程式語言的常數)，集中管理顏色與字體大小 */
-:root {
+/* 定義全域變數：顏色與字體大小由 data-palette + data-theme 組合決定 */
+:root,
+html[data-palette="default"] {
     --bg-color: #ffffff;
     --text-color: #333333;
     --toolbar-bg: #f5f5f5;
-    --base-font-size: 18px; /* 這個變數會被 app.js 動態修改 */
+    --base-font-size: 18px; /* 由 app.js 動態修改 */
     --border-color: #dcdcdc;
     --accent: #2f6fed;
+    --muted: #888888;
 }
 
-/* 黑暗模式的變數覆蓋：
-   當 JS 在 HTML 標籤加上 data-theme="dark" 時，會自動套用這組顏色。
-   這種做法避免了去更改每個元素的 class，大幅降低瀏覽器重繪 (Repaint) 的負擔 */
-[data-theme="dark"] {
+html[data-theme="dark"][data-palette="default"] {
     --bg-color: #121212;
     --text-color: #e0e0e0;
     --toolbar-bg: #1f1f1f;
+    --border-color: #3a3a3a;
+    --accent: #6b9cff;
+    --muted: #9e9e9e;
+}
+
+/* 酒紅 */
+html[data-palette="wine"] {
+    --bg-color: #fdf8f9;
+    --text-color: #3d1f26;
+    --toolbar-bg: #f5e6ea;
+    --border-color: #e8c4cc;
+    --accent: #9b2335;
+    --muted: #a67a84;
+}
+
+html[data-theme="dark"][data-palette="wine"] {
+    --bg-color: #1a1214;
+    --text-color: #f0e6e8;
+    --toolbar-bg: #2a1a1f;
+    --border-color: #4a3038;
+    --accent: #e85d75;
+    --muted: #9a8a8e;
+}
+
+/* 青綠 */
+html[data-palette="teal"] {
+    --bg-color: #f0fdf9;
+    --text-color: #134e4a;
+    --toolbar-bg: #ccfbf1;
+    --border-color: #99f6e4;
+    --accent: #0d9488;
+    --muted: #5e9b94;
+}
+
+html[data-theme="dark"][data-palette="teal"] {
+    --bg-color: #0f1a18;
+    --text-color: #e0f7f4;
+    --toolbar-bg: #162e2b;
+    --border-color: #2d4a4a;
+    --accent: #2dd4bf;
+    --muted: #7a9e9a;
+}
+
+/* 琥珀 */
+html[data-palette="amber"] {
+    --bg-color: #fffbeb;
+    --text-color: #451a03;
+    --toolbar-bg: #fef3c7;
+    --border-color: #fcd34d;
+    --accent: #d97706;
+    --muted: #a16207;
+}
+
+html[data-theme="dark"][data-palette="amber"] {
+    --bg-color: #1c1408;
+    --text-color: #fef3c7;
+    --toolbar-bg: #292318;
+    --border-color: #4a3f2a;
+    --accent: #fbbf24;
+    --muted: #d4a574;
+}
+
+/* 紫羅蘭 */
+html[data-palette="violet"] {
+    --bg-color: #faf5ff;
+    --text-color: #3b0764;
+    --toolbar-bg: #ede9fe;
+    --border-color: #ddd6fe;
+    --accent: #7c3aed;
+    --muted: #7c6b9e;
+}
+
+html[data-theme="dark"][data-palette="violet"] {
+    --bg-color: #160b24;
+    --text-color: #ede9fe;
+    --toolbar-bg: #221835;
+    --border-color: #3d2d5c;
+    --accent: #a78bfa;
+    --muted: #9b8bb8;
+}
+
+/* 墨綠 */
+html[data-palette="forest"] {
+    --bg-color: #f0fdf4;
+    --text-color: #14532d;
+    --toolbar-bg: #dcfce7;
+    --border-color: #86efac;
+    --accent: #15803d;
+    --muted: #4d7c59;
+}
+
+html[data-theme="dark"][data-palette="forest"] {
+    --bg-color: #0f1a12;
+    --text-color: #dcfce7;
+    --toolbar-bg: #152a1c;
+    --border-color: #2d4a35;
+    --accent: #4ade80;
+    --muted: #86a889;
 }
 
 /* 基礎排版設定 */
@@ -24,7 +121,7 @@ body {
     font-size: var(--base-font-size);
     font-family: "PingFang TC", "Heiti TC", "微軟正黑體", sans-serif;
     margin: 0;
-    padding-top: 160px; /* 預留頂部工具列的高度，避免內容被遮擋 */
+    padding-top: 200px; /* 預留頂部工具列（含配色列）的高度 */
     transition: background-color 0.3s ease, color 0.3s ease; /* 讓日夜切換有平滑的漸變動畫 */
 }
 
@@ -92,7 +189,7 @@ input[type="search"] {
 
 .verse-num {
     font-size: 0.8em;
-    color: #888;
+    color: var(--muted);
     margin-right: 8px;
     user-select: none; /* 防止複製經文時不小心複製到節數 */
 }
@@ -136,9 +233,14 @@ input[type="search"] {
     font-size: 13px;
 }
 
+.toolbar-row-palette select {
+    width: 100%;
+    max-width: 420px;
+}
+
 @media (max-width: 640px) {
     body {
-        padding-top: 210px;
+        padding-top: 250px;
     }
 
     .toolbar-row {
