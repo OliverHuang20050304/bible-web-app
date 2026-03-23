@@ -2,7 +2,9 @@
 
 繁體中文聖經網頁閱讀器：支援完整 66 卷、章節切換、字體縮放、日夜模式、多種配色、關鍵字搜尋，以及記住上次閱讀位置（手機友善）。
 
-# 立即使用：https://oliverhuang20050304.github.io/bible-web-app/
+## 立即使用：
+
+https://oliverhuang20050304.github.io/bible-web-app/
 
 ## 功能
 
