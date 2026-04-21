@@ -6,6 +6,10 @@
 
 https://oliverhuang20050304.github.io/bible-web-app/
 
+## 支援PWA
+現在這個網站在 iPhone 跟 Android 上都支援 PWA 啦！
+也就是說只要在瀏覽器選「加入主畫面」->「安裝成應用程式」，就可以當作一般 app 來使用了！
+
 ## 功能
 
 - **完整聖經**：66 卷書卷與各卷章數；經文透過 [信望愛聖經 JSON API](https://bible.fhl.net/api/) 線上載入（和合本 `unv`）。
