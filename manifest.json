@@ -1,0 +1,8 @@
+{
+    "short_name": "聖經閱讀",
+    "name": "聖經閱讀器",
+    "display": "standalone", 
+    "start_url": "/",
+    "background_color": "#ffffff",
+    "theme_color": "#000000"
+  }
