@@ -2,7 +2,8 @@
     "short_name": "聖經閱讀",
     "name": "聖經閱讀器",
     "display": "standalone", 
-    "start_url": "/",
+    "start_url": "/bible-web-app/",
+    "scope": "/bible-web-app/",
     "background_color": "#ffffff",
     "theme_color": "#000000"
   }
