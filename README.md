@@ -1,48 +1,72 @@
-# 純淨聖經閱讀器
+# 純淨聖經閱讀器 · Pure Bible Reader
 
-繁體中文聖經網頁閱讀器：支援完整 66 卷、章節切換、字體縮放、日夜模式、多種配色、關鍵字搜尋，以及記住上次閱讀位置（手機友善）。
+繁體中文／英文聖經網頁閱讀器：支援完整 66 卷、章節切換、字體縮放、日夜模式、多種配色、關鍵字搜尋，以及記住上次閱讀位置（手機友善）。
 
-## 立即使用：
+A clean, mobile-friendly Bible reader supporting Traditional Chinese (CUV) and English (KJV). Features full 66-book navigation, font scaling, dark/light mode, colour themes, keyword search, and reading progress memory.
 
-https://oliverhuang20050304.github.io/bible-web-app/
+---
 
-## 支援PWA
-現在這個網站在 iPhone 跟 Android 上都支援 PWA 啦！
-也就是說只要在瀏覽器選「加入主畫面」->「安裝成應用程式」，就可以當作一般 app 來使用了！
+## 立即使用 · Live Demo
 
-## 功能
+🔗 <https://oliverhuang20050304.github.io/bible-web-app/>
 
-- **完整聖經**：66 卷書卷與各卷章數；經文透過 [信望愛聖經 JSON API](https://bible.fhl.net/api/) 線上載入（和合本 `unv`）。
-- **章節導覽**：書卷／章節下拉選單、上一章／下一章。
-- **字體與外觀**：`A+`／`A-` 調整字體、`日／夜` 切換、**配色主題**（預設藍、酒紅、青綠、琥珀、紫羅蘭、墨綠等）。
-- **快速搜尋**：輸入關鍵字搜尋經文，結果可一鍵跳到該章。
-- **閱讀進度**：自動儲存書卷、章節與捲動位置；`回到上次` 可立即還原。
+---
 
-## 本機預覽
+## 支援 PWA · PWA Support
 
-在專案目錄用任一靜態伺服器即可（避免 `file://` 直接開檔，部分瀏覽器對 `fetch` 較嚴格）：
+在 iPhone 或 Android 瀏覽器中點「加入主畫面」→「安裝成應用程式」，即可當一般 App 使用。
+
+On iPhone or Android, tap **Add to Home Screen → Install** in your browser to use it as a native-like app.
+
+---
+
+## 功能 · Features
+
+| 功能 | Feature |
+|------|---------|
+| 完整聖經 66 卷，章節下拉切換 | Full 66-book navigation with chapter selector |
+| 上一章 / 下一章快速翻頁 | Prev / Next chapter buttons |
+| 中文（和合本）/ 英文（KJV）譯本切換 | Switch between Chinese (CUV) and English (KJV) |
+| A+ / A- 字體大小調整 | Font size scaling |
+| 日 / 夜模式切換 | Light / Dark mode |
+| 6 種配色主題 | 6 colour palettes |
+| 關鍵字搜尋，可一鍵跳到該章 | Keyword search with jump-to-chapter |
+| 自動記住閱讀位置，「回到上次」一鍵還原 | Auto-saves reading position with one-tap resume |
+
+---
+
+## 本機預覽 · Local Preview
 
 ```bash
 cd bible-app
 python3 -m http.server 8080
+# open http://127.0.0.1:8080/
 ```
 
-瀏覽器開啟：<http://127.0.0.1:8080/>
+---
 
-## 專案結構
+## 專案結構 · Project Structure
 
 | 檔案 | 說明 |
 |------|------|
-| `index.html` | 頁面結構 |
-| `style.css` | 樣式（含手機版與配色主題） |
-| `app.js` | 載入經文、搜尋、儲存設定 |
-| `data.js` | 66 卷 metadata 與 API 基底網址 |
+| `index.html` | 頁面結構 · Page structure |
+| `style.css` | 樣式、主題 · Styles & themes |
+| `app.js` | 邏輯、API、設定 · Logic, API calls, settings |
+| `data.js` | 66 卷 metadata（書名、章數、縮寫）· Book metadata |
 
-## 注意事項
+---
 
-- 經文與搜尋需 **網路連線**；API 與版權請遵守 [信望愛站說明](https://bible.fhl.net/api/)。
-- 閱讀進度存在瀏覽器 **localStorage**，換裝置或清除網站資料後需重新累積。
+## 注意事項 · Notes
 
-## 授權
+- 經文內容需 **網路連線**，透過 [信望愛聖經 API](https://bible.fhl.net/api/) 載入，請遵守其版權說明。
+- Scripture content is loaded online via the [FHL Bible API](https://bible.fhl.net/api/). Please respect their copyright terms.
+- 閱讀進度存於瀏覽器 **localStorage**，換裝置或清除網站資料後需重新累積。
+- Reading progress is stored in browser **localStorage** and will reset if site data is cleared.
 
-本專案程式碼可依你 repo 設定的授權條款使用；聖經經文內容之權利歸原譯本與提供單位所有。
+---
+
+## 授權 · License
+
+程式碼部分依本 repo 授權條款使用；聖經經文內容之著作權歸原譯本與提供單位所有。
+
+Code is available under this repo's licence. Bible text copyright belongs to the respective translators and publishers.
