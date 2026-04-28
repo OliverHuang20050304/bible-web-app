@@ -1,10 +1,12 @@
 const VALID_PALETTES = ["default", "wine", "teal", "amber", "violet", "forest"];
+const DEFAULT_VERSION = "unv";
 
 const BibleApp = {
-    storageKey: "bibleAppState_v5",
+    storageKey: "bibleAppState_v6",
     state: {
         theme: "light",
         palette: "default",
+        version: DEFAULT_VERSION,
         fontSize: 18,
         lastRead: {
             bid: 1,
@@ -25,6 +27,7 @@ const BibleApp = {
         this.renderSelectors();
         this.bindEvents();
         this.applySettings();
+        this.loadVersions();
         this.loadChapter();
     },
 
@@ -32,15 +35,17 @@ const BibleApp = {
         try {
             let savedData = localStorage.getItem(this.storageKey);
             if (!savedData) {
-                const legacyKey = "bibleAppState_v4";
-                const legacyData = localStorage.getItem(legacyKey);
-                if (legacyData) {
+                const legacyKeys = ["bibleAppState_v5", "bibleAppState_v4"];
+                for (const legacyKey of legacyKeys) {
+                    const legacyData = localStorage.getItem(legacyKey);
+                    if (!legacyData) continue;
                     savedData = legacyData;
                     try {
                         localStorage.setItem(this.storageKey, legacyData);
                     } catch {
                         /* ignore quota */
                     }
+                    break;
                 }
             }
             if (!savedData) return;
@@ -54,6 +59,9 @@ const BibleApp = {
             if (!VALID_PALETTES.includes(this.state.palette)) {
                 this.state.palette = "default";
             }
+            if (typeof this.state.version !== "string" || this.state.version.trim().length === 0) {
+                this.state.version = DEFAULT_VERSION;
+            }
         } catch (error) {
             console.error("讀取設定失敗:", error);
         }
@@ -66,6 +74,7 @@ const BibleApp = {
     bindEvents() {
         const bookSelect = document.getElementById("book-select");
         const chapterSelect = document.getElementById("chapter-select");
+        const versionSelect = document.getElementById("version-select");
         const btnSearch = document.getElementById("btn-search");
         const searchInput = document.getElementById("search-input");
 
@@ -78,6 +87,9 @@ const BibleApp = {
 
         document.getElementById("palette-select")?.addEventListener("change", (event) => {
             this.setPalette(event.target.value);
+        });
+        versionSelect?.addEventListener("change", (event) => {
+            this.setVersion(event.target.value);
         });
 
         bookSelect?.addEventListener("change", (event) => {
@@ -120,6 +132,9 @@ const BibleApp = {
         if (!VALID_PALETTES.includes(this.state.palette)) {
             this.state.palette = "default";
         }
+        if (typeof this.state.version !== "string" || this.state.version.trim().length === 0) {
+            this.state.version = DEFAULT_VERSION;
+        }
     },
 
     renderSelectors() {
@@ -158,6 +173,8 @@ const BibleApp = {
         document.documentElement.style.setProperty("--base-font-size", `${this.state.fontSize}px`);
         const paletteSelect = document.getElementById("palette-select");
         if (paletteSelect) paletteSelect.value = this.state.palette || "default";
+        const versionSelect = document.getElementById("version-select");
+        if (versionSelect) versionSelect.value = this.state.version || DEFAULT_VERSION;
     },
 
     setPalette(palette) {
@@ -165,6 +182,61 @@ const BibleApp = {
         this.state.palette = palette;
         this.applySettings();
         this.saveSettings();
+    },
+
+    setVersion(version) {
+        if (typeof version !== "string" || version.trim().length === 0) return;
+        this.state.version = version;
+        this.applySettings();
+        this.saveSettings();
+        this.loadChapter(false);
+    },
+
+    async loadVersions() {
+        const versionSelect = document.getElementById("version-select");
+        if (!versionSelect) return;
+
+        const fallback = [
+            { book: "unv", cname: "和合本 (UNV)" },
+            { book: "rcuv", cname: "和合本2010 (RCUV)" },
+            { book: "tcv2019", cname: "現代中文譯本2019 (TCV2019)" },
+            { book: "kjv", cname: "KJV" },
+            { book: "web", cname: "WEB" },
+            { book: "asv", cname: "ASV" }
+        ];
+
+        try {
+            const response = await fetch(`${BIBLE_API_BASE}/ab.php`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            const records = Array.isArray(data.record) ? data.record : fallback;
+            this.renderVersionSelector(records);
+        } catch (error) {
+            console.error("載入譯本清單失敗:", error);
+            this.renderVersionSelector(fallback);
+        }
+    },
+
+    renderVersionSelector(records) {
+        const versionSelect = document.getElementById("version-select");
+        if (!versionSelect) return;
+
+        versionSelect.innerHTML = "";
+
+        records.forEach((item) => {
+            if (!item?.book) return;
+            const option = document.createElement("option");
+            option.value = String(item.book);
+            option.textContent = item.cname ? `${item.cname} (${item.book})` : String(item.book);
+            if (option.value === (this.state.version || DEFAULT_VERSION)) {
+                option.selected = true;
+            }
+            versionSelect.appendChild(option);
+        });
+
+        if (!versionSelect.value) {
+            versionSelect.value = this.state.version || DEFAULT_VERSION;
+        }
     },
 
     toggleTheme() {
@@ -191,7 +263,8 @@ const BibleApp = {
         versesContainer.innerHTML = "<p>載入中...</p>";
 
         try {
-            const url = `${BIBLE_API_BASE}/qb.php?chineses=${encodeURIComponent(selectedBook.abbr)}&chap=${chapter}&gb=0&version=unv`;
+            const version = this.state.version || DEFAULT_VERSION;
+            const url = `${BIBLE_API_BASE}/qb.php?chineses=${encodeURIComponent(selectedBook.abbr)}&chap=${encodeURIComponent(chapter)}&gb=0&version=${encodeURIComponent(version)}`;
             const response = await fetch(url);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
@@ -243,7 +316,8 @@ const BibleApp = {
         resultBox.innerHTML = "<p>搜尋中...</p>";
 
         try {
-            const url = `${BIBLE_API_BASE}/se.php?VERSION=unv&orig=0&q=${encodeURIComponent(keyword)}&RANGE=0&limit=30&offset=0&gb=0`;
+            const version = this.state.version || DEFAULT_VERSION;
+            const url = `${BIBLE_API_BASE}/se.php?VERSION=${encodeURIComponent(version)}&orig=0&q=${encodeURIComponent(keyword)}&RANGE=0&limit=30&offset=0&gb=0`;
             const response = await fetch(url);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
@@ -269,23 +343,24 @@ const BibleApp = {
         records.forEach((item) => {
             const row = document.createElement("div");
             row.className = "search-item";
-            const fullBookName = this.getBookNameByAbbr(item.chineses);
+            const bookByBid = this.getBookByBid(item.bid);
+            const fullBookName = bookByBid?.name ?? this.getBookNameByAbbr(item.chineses);
             row.innerHTML = `
                 <span class="search-ref">${fullBookName} ${item.chap}:${item.sec}</span>
                 <span>${item.bible_text}</span>
                 <div class="search-jump">
-                    <button data-abbr="${item.chineses}" data-chapter="${item.chap}">跳到這章</button>
+                    <button data-bid="${item.bid}" data-chapter="${item.chap}">跳到這章</button>
                 </div>
             `;
             fragment.appendChild(row);
         });
         resultBox.appendChild(fragment);
 
-        resultBox.querySelectorAll("button[data-abbr]").forEach((button) => {
+        resultBox.querySelectorAll("button[data-bid]").forEach((button) => {
             button.addEventListener("click", () => {
-                const abbr = button.getAttribute("data-abbr");
+                const bid = Number(button.getAttribute("data-bid"));
                 const chapter = Number(button.getAttribute("data-chapter"));
-                const book = this.getBookByAbbr(abbr);
+                const book = this.getBookByBid(bid);
                 if (!book) return;
                 this.state.lastRead.bid = book.bid;
                 this.state.lastRead.chapter = chapter;
