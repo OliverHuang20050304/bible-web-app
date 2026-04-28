@@ -1,8 +1,9 @@
 const VALID_PALETTES = ["default", "wine", "teal", "amber", "violet", "forest"];
+const VALID_VERSIONS = ["unv", "kjv"];
 const DEFAULT_VERSION = "unv";
 
 const BibleApp = {
-    storageKey: "bibleAppState_v6",
+    storageKey: "bibleAppState_v7",
     state: {
         theme: "light",
         palette: "default",
@@ -27,7 +28,6 @@ const BibleApp = {
         this.renderSelectors();
         this.bindEvents();
         this.applySettings();
-        this.loadVersions();
         this.loadChapter();
     },
 
@@ -59,7 +59,7 @@ const BibleApp = {
             if (!VALID_PALETTES.includes(this.state.palette)) {
                 this.state.palette = "default";
             }
-            if (typeof this.state.version !== "string" || this.state.version.trim().length === 0) {
+            if (!VALID_VERSIONS.includes(this.state.version)) {
                 this.state.version = DEFAULT_VERSION;
             }
         } catch (error) {
@@ -132,7 +132,7 @@ const BibleApp = {
         if (!VALID_PALETTES.includes(this.state.palette)) {
             this.state.palette = "default";
         }
-        if (typeof this.state.version !== "string" || this.state.version.trim().length === 0) {
+        if (!VALID_VERSIONS.includes(this.state.version)) {
             this.state.version = DEFAULT_VERSION;
         }
     },
@@ -185,58 +185,11 @@ const BibleApp = {
     },
 
     setVersion(version) {
-        if (typeof version !== "string" || version.trim().length === 0) return;
+        if (!VALID_VERSIONS.includes(version)) return;
         this.state.version = version;
         this.applySettings();
         this.saveSettings();
         this.loadChapter(false);
-    },
-
-    async loadVersions() {
-        const versionSelect = document.getElementById("version-select");
-        if (!versionSelect) return;
-
-        const fallback = [
-            { book: "unv", cname: "和合本 (UNV)" },
-            { book: "rcuv", cname: "和合本2010 (RCUV)" },
-            { book: "tcv2019", cname: "現代中文譯本2019 (TCV2019)" },
-            { book: "kjv", cname: "KJV" },
-            { book: "web", cname: "WEB" },
-            { book: "asv", cname: "ASV" }
-        ];
-
-        try {
-            const response = await fetch(`${BIBLE_API_BASE}/ab.php`);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
-            const records = Array.isArray(data.record) ? data.record : fallback;
-            this.renderVersionSelector(records);
-        } catch (error) {
-            console.error("載入譯本清單失敗:", error);
-            this.renderVersionSelector(fallback);
-        }
-    },
-
-    renderVersionSelector(records) {
-        const versionSelect = document.getElementById("version-select");
-        if (!versionSelect) return;
-
-        versionSelect.innerHTML = "";
-
-        records.forEach((item) => {
-            if (!item?.book) return;
-            const option = document.createElement("option");
-            option.value = String(item.book);
-            option.textContent = item.cname ? `${item.cname} (${item.book})` : String(item.book);
-            if (option.value === (this.state.version || DEFAULT_VERSION)) {
-                option.selected = true;
-            }
-            versionSelect.appendChild(option);
-        });
-
-        if (!versionSelect.value) {
-            versionSelect.value = this.state.version || DEFAULT_VERSION;
-        }
     },
 
     toggleTheme() {
@@ -259,7 +212,11 @@ const BibleApp = {
         const versesContainer = document.getElementById("verses");
 
         if (!selectedBook || !chapterTitle || !versesContainer) return;
-        chapterTitle.textContent = `${selectedBook.name} 第 ${chapter} 章`;
+        const isEnglish = (this.state.version || DEFAULT_VERSION) === "kjv";
+        const titleText = isEnglish
+            ? `${selectedBook.engName} Chapter ${chapter}`
+            : `${selectedBook.name} 第 ${chapter} 章`;
+        chapterTitle.textContent = titleText;
         versesContainer.innerHTML = "<p>載入中...</p>";
 
         try {
