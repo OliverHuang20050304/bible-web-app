@@ -235,7 +235,7 @@ const BibleApp = {
                 window.scrollTo({ top: 0, behavior: "smooth" });
             }
         } catch (error) {
-            versesContainer.innerHTML = "<p style=\"color:red;\">載入失敗，請檢查網路或稍後再試。</p>";
+            versesContainer.innerHTML = "<p class=\"error-msg\">載入失敗，請檢查網路或稍後再試。</p>";
             console.error("章節載入失敗:", error);
         }
     },
@@ -281,7 +281,7 @@ const BibleApp = {
             const records = Array.isArray(data.record) ? data.record : [];
             this.renderSearchResults(records, keyword);
         } catch (error) {
-            resultBox.innerHTML = "<p style=\"color:red;\">搜尋失敗，請稍後再試。</p>";
+            resultBox.innerHTML = "<p class=\"error-msg\">搜尋失敗，請稍後再試。</p>";
             console.error("搜尋失敗:", error);
         }
     },
@@ -306,7 +306,7 @@ const BibleApp = {
                 <span class="search-ref">${fullBookName} ${item.chap}:${item.sec}</span>
                 <span>${item.bible_text}</span>
                 <div class="search-jump">
-                    <button data-bid="${item.bid}" data-chapter="${item.chap}">跳到這章</button>
+                    <button data-bid="${item.bid}" data-abbr="${item.chineses}" data-chapter="${item.chap}">跳到這章</button>
                 </div>
             `;
             fragment.appendChild(row);
@@ -316,8 +316,9 @@ const BibleApp = {
         resultBox.querySelectorAll("button[data-bid]").forEach((button) => {
             button.addEventListener("click", () => {
                 const bid = Number(button.getAttribute("data-bid"));
+                const abbr = button.getAttribute("data-abbr");
                 const chapter = Number(button.getAttribute("data-chapter"));
-                const book = this.getBookByBid(bid);
+                const book = this.getBookByBid(bid) || this.getBookByAbbr(abbr);
                 if (!book) return;
                 this.state.lastRead.bid = book.bid;
                 this.state.lastRead.chapter = chapter;
@@ -326,6 +327,7 @@ const BibleApp = {
                 this.updateSelectorsValue();
                 this.saveSettings();
                 this.loadChapter(false);
+                resultBox.classList.add("hidden");
             });
         });
     },

@@ -4,41 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>純淨聖經閱讀器</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.png">
 </head>
 <body>
-    <header class="toolbar">
-        <div class="toolbar-row">
-            <button id="btn-prev-chapter" aria-label="上一章">上一章</button>
-            <select id="book-select" aria-label="選擇書卷"></select>
-            <select id="chapter-select" aria-label="選擇章節"></select>
-            <button id="btn-next-chapter" aria-label="下一章">下一章</button>
+    <header class="top-app-bar">
+        <!-- Row 1: App Bar with title and icon actions -->
+        <div class="app-bar-row">
+            <span class="app-bar-title">聖經閱讀器</span>
+            <div class="app-bar-actions">
+                <button class="icon-btn" id="btn-font-minus" aria-label="縮小字體">
+                    <span class="material-symbols-outlined">text_decrease</span>
+                </button>
+                <button class="icon-btn" id="btn-font-plus" aria-label="放大字體">
+                    <span class="material-symbols-outlined">text_increase</span>
+                </button>
+                <button class="icon-btn" id="btn-theme" aria-label="切換日夜模式">
+                    <span class="material-symbols-outlined theme-icon-light">dark_mode</span>
+                    <span class="material-symbols-outlined theme-icon-dark">light_mode</span>
+                </button>
+            </div>
         </div>
-        <div class="toolbar-row">
-            <button id="btn-font-minus" aria-label="縮小字體">A-</button>
-            <button id="btn-font-plus" aria-label="放大字體">A+</button>
-            <button id="btn-resume" aria-label="回到上次閱讀位置">回到上次</button>
-            <button id="btn-theme" aria-label="切換日夜模式">日/夜</button>
+
+        <!-- Row 2: Chapter navigation -->
+        <div class="toolbar-row nav-row">
+            <button class="icon-btn" id="btn-prev-chapter" aria-label="上一章">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <div class="select-wrapper book-select-wrapper">
+                <select id="book-select" aria-label="選擇書卷"></select>
+            </div>
+            <div class="select-wrapper">
+                <select id="chapter-select" aria-label="選擇章節"></select>
+            </div>
+            <button class="icon-btn" id="btn-next-chapter" aria-label="下一章">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+            <button class="icon-btn" id="btn-resume" aria-label="回到上次閱讀位置">
+                <span class="material-symbols-outlined">bookmark</span>
+            </button>
         </div>
-        <div class="toolbar-row toolbar-row-palette">
-            <select id="palette-select" aria-label="配色主題">
-                <option value="default">預設藍</option>
-                <option value="wine">酒紅</option>
-                <option value="teal">青綠</option>
-                <option value="amber">琥珀</option>
-                <option value="violet">紫羅蘭</option>
-                <option value="forest">墨綠</option>
-            </select>
-            <select id="version-select" aria-label="聖經譯本">
-                <option value="unv">中文（和合本）</option>
-                <option value="kjv">English (KJV)</option>
-            </select>
+
+        <!-- Row 3: Palette and version selectors -->
+        <div class="toolbar-row settings-row">
+            <div class="select-wrapper">
+                <select id="palette-select" aria-label="配色主題">
+                    <option value="default">預設藍</option>
+                    <option value="wine">酒紅</option>
+                    <option value="teal">青綠</option>
+                    <option value="amber">琥珀</option>
+                    <option value="violet">紫羅蘭</option>
+                    <option value="forest">墨綠</option>
+                </select>
+            </div>
+            <div class="select-wrapper">
+                <select id="version-select" aria-label="聖經譯本">
+                    <option value="unv">和合本</option>
+                    <option value="kjv">KJV</option>
+                </select>
+            </div>
         </div>
-        <div class="toolbar-row">
-            <input id="search-input" type="search" placeholder="快速搜尋經文，例如：愛、信心、耶穌" aria-label="快速搜尋經文">
-            <button id="btn-search" aria-label="搜尋經文">搜尋</button>
+
+        <!-- Row 4: Search -->
+        <div class="toolbar-row search-row">
+            <div class="search-field-wrapper">
+                <span class="material-symbols-outlined search-leading-icon">search</span>
+                <input id="search-input" type="search" placeholder="搜尋經文，例如：愛、信心、耶穌" aria-label="快速搜尋經文">
+            </div>
+            <button class="filled-btn" id="btn-search" aria-label="搜尋經文">搜尋</button>
         </div>
     </header>
 
