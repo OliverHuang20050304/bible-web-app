@@ -1,4 +1,4 @@
-const VALID_PALETTES = ["default", "wine", "teal", "amber", "violet", "forest"];
+const VALID_PALETTES = ["washi", "default", "wine", "teal", "amber", "violet", "forest"];
 const VALID_VERSIONS = ["unv", "kjv"];
 const DEFAULT_VERSION = "unv";
 
@@ -6,7 +6,7 @@ const BibleApp = {
     storageKey: "bibleAppState_v7",
     state: {
         theme: "light",
-        palette: "default",
+        palette: "washi",
         version: DEFAULT_VERSION,
         fontSize: 18,
         lastRead: {
@@ -244,17 +244,52 @@ const BibleApp = {
         const versesContainer = document.getElementById("verses");
         if (!versesContainer) return;
         versesContainer.innerHTML = "";
+        const book = this.getBookByBid(this.state.lastRead.bid);
+        const isEnglish = (this.state.version || DEFAULT_VERSION) === "kjv";
+        const bookName = isEnglish ? (book?.engName ?? "") : (book?.name ?? "");
+        const chapter = this.state.lastRead.chapter;
         const fragment = document.createDocumentFragment();
         records.forEach((verse) => {
             const paragraph = document.createElement("p");
+            paragraph.className = "verse-line";
             const verseNum = document.createElement("span");
             verseNum.className = "verse-num";
             verseNum.textContent = verse.sec;
             paragraph.appendChild(verseNum);
             paragraph.appendChild(document.createTextNode(` ${verse.bible_text}`));
+
+            const copyBtn = document.createElement("button");
+            copyBtn.className = "verse-copy icon-btn";
+            copyBtn.setAttribute("aria-label", "複製這節經文");
+            copyBtn.innerHTML = '<span class="material-symbols-outlined">content_copy</span>';
+            const refText = `${bookName} ${chapter}:${verse.sec} ${verse.bible_text}`;
+            copyBtn.addEventListener("click", () => this.copyVerse(refText, copyBtn));
+            paragraph.appendChild(copyBtn);
+
             fragment.appendChild(paragraph);
         });
         versesContainer.appendChild(fragment);
+    },
+
+    async copyVerse(text, button) {
+        try {
+            await navigator.clipboard.writeText(text);
+        } catch (error) {
+            // ponytail: clipboard API needs https/localhost; fallback for file:// etc.
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            ta.remove();
+        }
+        const icon = button.querySelector(".material-symbols-outlined");
+        if (icon) {
+            icon.textContent = "check";
+            setTimeout(() => { icon.textContent = "content_copy"; }, 1200);
+        }
     },
 
     async searchVerses() {
@@ -351,6 +386,7 @@ const BibleApp = {
         this.state.lastRead.chapter = validChapter;
         this.state.lastRead.scrollPosition = 0;
         this.state.resumePoint = { ...this.state.lastRead };
+        this.updateSelectorsValue();
         this.saveSettings();
         this.loadChapter(false);
     },

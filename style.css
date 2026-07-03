@@ -3,6 +3,51 @@
    每個 palette 定義 MD3 色彩 token；theme（light/dark）切換深淺
    ============================================================ */
 
+/* === 和風（生成り washi × 藍墨 sumi） === */
+html[data-palette="washi"] {
+    --md-primary:              #3a5a78;   /* 藍墨 */
+    --md-on-primary:           #f5f1e6;
+    --md-primary-container:    #dfe4e9;
+    --md-on-primary-container: #1c2c3a;
+    --md-surface:              #f3efe3;   /* 生成り */
+    --md-surface-container:    #ece6d6;
+    --md-surface-container-hi: #e3dcc8;
+    --md-on-surface:           #2b2a26;   /* 墨 */
+    --md-on-surface-variant:   #6d675b;   /* 利休鼠 */
+    --md-outline:              #d6cdb8;
+    --md-outline-variant:      #e4dcc9;
+    --base-font-size: 18px;
+}
+
+html[data-theme="dark"][data-palette="washi"] {
+    --md-primary:              #8fb0cc;   /* 浅葱 */
+    --md-on-primary:           #0f1a26;
+    --md-primary-container:    #2c3b4a;
+    --md-on-primary-container: #d5e2ee;
+    --md-surface:              #16171a;   /* 夜 */
+    --md-surface-container:    #1e2024;
+    --md-surface-container-hi: #282b30;
+    --md-on-surface:           #e7e1d2;   /* 生成り on dark */
+    --md-on-surface-variant:   #9c9585;
+    --md-outline:              #3a3d43;
+    --md-outline-variant:      #2a2d33;
+}
+
+/* 明朝体 + 和紙紋理：讓和風配色整體偏日式閱讀感 */
+html[data-palette="washi"] body {
+    font-family: 'Noto Serif TC', 'Roboto', serif;
+    background-image:
+        radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--md-on-surface) 2%, transparent) 0 1px, transparent 1px),
+        radial-gradient(circle at 70% 60%, color-mix(in srgb, var(--md-on-surface) 2%, transparent) 0 1px, transparent 1px);
+    background-size: 7px 7px, 11px 11px;
+}
+html[data-palette="washi"] #chapter-title,
+html[data-palette="washi"] #verses,
+html[data-palette="washi"] .app-bar-title {
+    font-family: 'Noto Serif TC', serif;
+    letter-spacing: 0.03em;
+}
+
 /* === 預設藍（Google Blue） === */
 :root,
 html[data-palette="default"] {
@@ -524,6 +569,42 @@ html[data-theme="dark"]   .theme-icon-light { display: none; }
     opacity: 0.65;
     margin-right: 6px;
     user-select: none;
+}
+
+/* Per-verse copy button */
+.verse-line {
+    position: relative;
+    padding-right: 34px;
+}
+
+.verse-copy {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    position: absolute;
+    top: 2px;
+    right: 0;
+    opacity: 0;
+    transition: opacity 0.15s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.verse-copy .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.verse-line:hover .verse-copy,
+.verse-copy:focus-visible {
+    opacity: 0.7;
+}
+
+.verse-copy:hover {
+    opacity: 1;
+    color: var(--md-primary);
+}
+
+/* Touch devices have no hover — keep the button faintly visible */
+@media (hover: none) {
+    .verse-copy { opacity: 0.4; }
 }
 
 /* ============================================================
