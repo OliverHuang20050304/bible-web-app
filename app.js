@@ -25,6 +25,12 @@ const BibleApp = {
     init() {
         this.loadSettings();
         this.ensureValidState();
+        const linked = this.parseHash();
+        if (linked) {
+            this.state.lastRead.bid = linked.bid;
+            this.state.lastRead.chapter = linked.chapter;
+            this.state.lastRead.scrollPosition = 0;
+        }
         this.renderSelectors();
         this.bindEvents();
         this.applySettings();
@@ -107,6 +113,18 @@ const BibleApp = {
         btnSearch?.addEventListener("click", () => this.searchVerses());
         searchInput?.addEventListener("keydown", (event) => {
             if (event.key === "Enter") this.searchVerses();
+        });
+
+        // 上一頁/下一頁按鈕與分享連結：跟隨網址 hash
+        window.addEventListener("hashchange", () => this.onHashChange());
+
+        // 鍵盤 ← / → 翻章（打字時不觸發）
+        document.addEventListener("keydown", (event) => {
+            if (event.metaKey || event.ctrlKey || event.altKey) return;
+            const tag = (event.target.tagName || "").toLowerCase();
+            if (tag === "input" || tag === "select" || tag === "textarea") return;
+            if (event.key === "ArrowLeft") this.goChapter(-1);
+            else if (event.key === "ArrowRight") this.goChapter(1);
         });
 
         let scrollTimeout;
@@ -210,6 +228,7 @@ const BibleApp = {
     },
 
     async loadChapter(restoreScroll = true) {
+        this.writeHash();
         const requestId = ++this.activeRequestId;
         const selectedBook = this.getBookByBid(this.state.lastRead.bid);
         const chapter = this.state.lastRead.chapter;
@@ -402,6 +421,36 @@ const BibleApp = {
         const nextChapter = this.state.lastRead.chapter + step;
         if (nextChapter < 1 || nextChapter > book.chapters) return;
         this.selectChapter(nextChapter);
+    },
+
+    // 深連結：#<bid>/<chapter>，例 #1/2 = 創世記第2章
+    parseHash() {
+        const match = (location.hash || "").match(/^#(\d+)\/(\d+)$/);
+        if (!match) return null;
+        const book = this.getBookByBid(Number(match[1]));
+        if (!book) return null;
+        return {
+            bid: book.bid,
+            chapter: Math.min(book.chapters, Math.max(1, Number(match[2])))
+        };
+    },
+
+    writeHash() {
+        const target = `#${this.state.lastRead.bid}/${this.state.lastRead.chapter}`;
+        if (location.hash !== target) location.hash = target;
+    },
+
+    onHashChange() {
+        const loc = this.parseHash();
+        if (!loc) return;
+        if (loc.bid === this.state.lastRead.bid && loc.chapter === this.state.lastRead.chapter) return;
+        this.state.lastRead.bid = loc.bid;
+        this.state.lastRead.chapter = loc.chapter;
+        this.state.lastRead.scrollPosition = 0;
+        this.state.resumePoint = { ...this.state.lastRead };
+        this.updateSelectorsValue();
+        this.saveSettings();
+        this.loadChapter(false);
     },
 
     resumeReading() {
