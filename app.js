@@ -59,6 +59,11 @@ const BibleApp = {
             if (!VALID_PALETTES.includes(this.state.palette)) {
                 this.state.palette = "default";
             }
+            // 一次性：舊使用者改用和風預設一次，之後仍可自由切換。
+            if (!this.state.washiMigrated) {
+                this.state.palette = "washi";
+                this.state.washiMigrated = true;
+            }
             if (!VALID_VERSIONS.includes(this.state.version)) {
                 this.state.version = DEFAULT_VERSION;
             }
