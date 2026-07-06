@@ -110,9 +110,22 @@ const BibleApp = {
             this.selectChapter(Number(event.target.value));
         });
 
-        btnSearch?.addEventListener("click", () => this.searchVerses());
+        btnSearch?.addEventListener("click", () => { this.searchVerses(); this.toggleSettings(false); });
         searchInput?.addEventListener("keydown", (event) => {
-            if (event.key === "Enter") this.searchVerses();
+            if (event.key === "Enter") { this.searchVerses(); this.toggleSettings(false); }
+        });
+
+        // 手機版設定圓球：開合面板
+        document.getElementById("btn-settings")?.addEventListener("click", (event) => {
+            event.stopPropagation();
+            this.toggleSettings();
+        });
+        // 點面板以外處關閉
+        document.addEventListener("click", (event) => {
+            const panel = document.getElementById("settings-panel");
+            if (!panel?.classList.contains("open")) return;
+            if (panel.contains(event.target)) return;
+            this.toggleSettings(false);
         });
 
         // 上一頁/下一頁按鈕與分享連結：跟隨網址 hash
@@ -438,6 +451,18 @@ const BibleApp = {
     writeHash() {
         const target = `#${this.state.lastRead.bid}/${this.state.lastRead.chapter}`;
         if (location.hash !== target) location.hash = target;
+    },
+
+    toggleSettings(force) {
+        const panel = document.getElementById("settings-panel");
+        const fab = document.getElementById("btn-settings");
+        if (!panel) return;
+        const open = force === undefined ? !panel.classList.contains("open") : force;
+        panel.classList.toggle("open", open);
+        if (fab) {
+            fab.setAttribute("aria-expanded", String(open));
+            fab.style.display = open ? "none" : "";  // 開啟時收起圓球，露出 sheet
+        }
     },
 
     onHashChange() {

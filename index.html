@@ -50,36 +50,44 @@
             </button>
         </div>
 
-        <!-- Row 3: Palette and version selectors -->
-        <div class="toolbar-row settings-row">
-            <div class="select-wrapper">
-                <select id="palette-select" aria-label="配色主題">
-                    <option value="washi">和風</option>
-                    <option value="default">預設藍</option>
-                    <option value="wine">酒紅</option>
-                    <option value="teal">青綠</option>
-                    <option value="amber">琥珀</option>
-                    <option value="violet">紫羅蘭</option>
-                    <option value="forest">墨綠</option>
-                </select>
+        <!-- Collapsible settings (inline on desktop, popover on mobile) -->
+        <div class="settings-panel" id="settings-panel">
+            <!-- Row 3: Palette and version selectors -->
+            <div class="toolbar-row settings-row">
+                <div class="select-wrapper">
+                    <select id="palette-select" aria-label="配色主題">
+                        <option value="washi">和風</option>
+                        <option value="default">預設藍</option>
+                        <option value="wine">酒紅</option>
+                        <option value="teal">青綠</option>
+                        <option value="amber">琥珀</option>
+                        <option value="violet">紫羅蘭</option>
+                        <option value="forest">墨綠</option>
+                    </select>
+                </div>
+                <div class="select-wrapper">
+                    <select id="version-select" aria-label="聖經譯本">
+                        <option value="unv">和合本</option>
+                        <option value="kjv">KJV</option>
+                    </select>
+                </div>
             </div>
-            <div class="select-wrapper">
-                <select id="version-select" aria-label="聖經譯本">
-                    <option value="unv">和合本</option>
-                    <option value="kjv">KJV</option>
-                </select>
-            </div>
-        </div>
 
-        <!-- Row 4: Search -->
-        <div class="toolbar-row search-row">
-            <div class="search-field-wrapper">
-                <span class="material-symbols-outlined search-leading-icon">search</span>
-                <input id="search-input" type="search" placeholder="搜尋經文，例如：愛、信心、耶穌" aria-label="快速搜尋經文">
+            <!-- Row 4: Search -->
+            <div class="toolbar-row search-row">
+                <div class="search-field-wrapper">
+                    <span class="material-symbols-outlined search-leading-icon">search</span>
+                    <input id="search-input" type="search" placeholder="搜尋經文，例如：愛、信心、耶穌" aria-label="快速搜尋經文">
+                </div>
+                <button class="filled-btn" id="btn-search" aria-label="搜尋經文">搜尋</button>
             </div>
-            <button class="filled-btn" id="btn-search" aria-label="搜尋經文">搜尋</button>
         </div>
     </header>
+
+    <!-- Mobile-only: floating settings ball -->
+    <button class="fab-settings" id="btn-settings" aria-label="設定" aria-expanded="false">
+        <span class="material-symbols-outlined">tune</span>
+    </button>
 
     <main id="bible-content" class="content-container">
         <h1 id="chapter-title">資料載入中...</h1>
