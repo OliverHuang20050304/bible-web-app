@@ -1,4 +1,4 @@
-const VALID_PALETTES = ["washi", "default", "wine", "teal", "amber", "violet", "forest"];
+const VALID_PALETTES = ["washi", "parchment", "starry", "zen", "default", "wine", "teal", "amber", "violet", "forest"];
 const VALID_VERSIONS = ["unv", "kjv"];
 const DEFAULT_VERSION = "unv";
 

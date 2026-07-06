@@ -48,6 +48,187 @@ html[data-palette="washi"] .app-bar-title {
     letter-spacing: 0.03em;
 }
 
+/* === 羊皮古卷 parchment === */
+html[data-palette="parchment"] {
+    --md-primary:              #8a5a2b;
+    --md-on-primary:           #ffffff;
+    --md-primary-container:    #ecd9b8;
+    --md-on-primary-container: #3d2a12;
+    --md-surface:              #f2e6cf;
+    --md-surface-container:    #ecdcbf;
+    --md-surface-container-hi: #e2cfa8;
+    --md-on-surface:           #3a2c1a;
+    --md-on-surface-variant:   #7a6444;
+    --md-outline:              #cdb488;
+    --md-outline-variant:      #e0cfa8;
+    --base-font-size: 18px;
+}
+html[data-theme="dark"][data-palette="parchment"] {
+    --md-primary:              #d8a860;
+    --md-on-primary:           #2a1c08;
+    --md-primary-container:    #5a4020;
+    --md-on-primary-container: #f2e0b8;
+    --md-surface:              #1c160e;
+    --md-surface-container:    #261e12;
+    --md-surface-container-hi: #33291a;
+    --md-on-surface:           #ece0c8;
+    --md-on-surface-variant:   #b09a76;
+    --md-outline:              #4a3c26;
+    --md-outline-variant:      #34291a;
+}
+html[data-palette="parchment"] body {
+    font-family: 'Noto Serif TC', serif;
+    background-image:
+        radial-gradient(ellipse at 50% 0%, transparent 62%, color-mix(in srgb, var(--md-on-surface) 12%, transparent) 100%),
+        radial-gradient(ellipse at 50% 100%, transparent 62%, color-mix(in srgb, var(--md-on-surface) 12%, transparent) 100%);
+    background-attachment: fixed;
+}
+html[data-palette="parchment"] #verses,
+html[data-palette="parchment"] .app-bar-title {
+    font-family: 'Noto Serif TC', serif;
+}
+html[data-palette="parchment"] #chapter-title {
+    font-family: 'Noto Serif TC', serif;
+    text-align: center;
+    border-bottom: none;
+    padding-bottom: 6px;
+    letter-spacing: 0.08em;
+}
+html[data-palette="parchment"] #chapter-title::after {
+    content: "❦";
+    display: block;
+    font-size: 0.6em;
+    color: var(--md-primary);
+    opacity: 0.8;
+    margin-top: 4px;
+}
+
+/* === 星夜 starry === */
+html[data-palette="starry"] {
+    --md-primary:              #3d4d80;
+    --md-on-primary:           #ffffff;
+    --md-primary-container:    #dde2f2;
+    --md-on-primary-container: #1a2245;
+    --md-surface:              #eef1f8;
+    --md-surface-container:    #e4e8f4;
+    --md-surface-container-hi: #d6dcee;
+    --md-on-surface:           #232842;
+    --md-on-surface-variant:   #5a6180;
+    --md-outline:              #c3cae2;
+    --md-outline-variant:      #dde2f2;
+    --base-font-size: 18px;
+}
+html[data-theme="dark"][data-palette="starry"] {
+    --md-primary:              #e6c565;
+    --md-on-primary:           #1a1a2e;
+    --md-primary-container:    #2e2c4a;
+    --md-on-primary-container: #f5e6b8;
+    --md-surface:              #0d1022;
+    --md-surface-container:    #141834;
+    --md-surface-container-hi: #1e2346;
+    --md-on-surface:           #e6e8f5;
+    --md-on-surface-variant:   #9aa0c4;
+    --md-outline:              #2e3358;
+    --md-outline-variant:      #1e2242;
+}
+html[data-palette="starry"] body,
+html[data-palette="starry"] #verses,
+html[data-palette="starry"] .app-bar-title {
+    font-family: 'Noto Serif TC', serif;
+}
+/* 星空閃爍：僅暗色模式，兩層錯開淡入淡出 */
+html[data-theme="dark"][data-palette="starry"] body::before,
+html[data-theme="dark"][data-palette="starry"] body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;               /* 在背景之上、文字之下 */
+    pointer-events: none;
+    background-repeat: no-repeat;
+    animation: star-twinkle 4s ease-in-out infinite;
+}
+html[data-theme="dark"][data-palette="starry"] body::before {
+    background-image:
+        radial-gradient(1px 1px at 18% 28%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1.6px 1.6px at 42% 68%, rgba(230,197,101,0.8), transparent),
+        radial-gradient(1px 1px at 56% 42%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 80% 88%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1.4px 1.4px at 12% 76%, rgba(255,255,255,0.6), transparent);
+}
+html[data-theme="dark"][data-palette="starry"] body::after {
+    background-image:
+        radial-gradient(1px 1px at 72% 18%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 86% 58%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 30% 82%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1.6px 1.6px at 62% 74%, rgba(230,197,101,0.75), transparent),
+        radial-gradient(1px 1px at 48% 14%, rgba(255,255,255,0.6), transparent);
+    animation-delay: 2s;       /* 與 ::before 錯開，形成閃爍 */
+}
+@keyframes star-twinkle {
+    0%, 100% { opacity: 0.25; }
+    50%      { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+    html[data-theme="dark"][data-palette="starry"] body::before,
+    html[data-theme="dark"][data-palette="starry"] body::after {
+        animation: none;
+        opacity: 0.8;
+    }
+}
+html[data-theme="dark"][data-palette="starry"] #chapter-title {
+    text-shadow: 0 0 10px rgba(230,197,101,0.3);
+}
+
+/* === 禪素 zen === */
+html[data-palette="zen"] {
+    --md-primary:              #6b7a5e;
+    --md-on-primary:           #ffffff;
+    --md-primary-container:    #dde3d4;
+    --md-on-primary-container: #2c3524;
+    --md-surface:              #f6f5f1;
+    --md-surface-container:    #efeee8;
+    --md-surface-container-hi: #e6e5dd;
+    --md-on-surface:           #33342e;
+    --md-on-surface-variant:   #6d6e64;
+    --md-outline:              #dedcd2;
+    --md-outline-variant:      #ebe9e1;
+    --base-font-size: 18px;
+}
+html[data-theme="dark"][data-palette="zen"] {
+    --md-primary:              #a3b58f;
+    --md-on-primary:           #1e2417;
+    --md-primary-container:    #3a4530;
+    --md-on-primary-container: #dde3d4;
+    --md-surface:              #171814;
+    --md-surface-container:    #1f201b;
+    --md-surface-container-hi: #292a24;
+    --md-on-surface:           #e6e5dd;
+    --md-on-surface-variant:   #999a8c;
+    --md-outline:              #34352d;
+    --md-outline-variant:      #26271f;
+}
+html[data-palette="zen"] body {
+    font-family: 'Noto Sans TC', 'Roboto', sans-serif;
+    font-weight: 300;
+}
+html[data-palette="zen"] .content-container {
+    line-height: 2.15;
+}
+html[data-palette="zen"] #chapter-title {
+    border-bottom: none;
+    text-align: center;
+    font-weight: 300;
+    letter-spacing: 0.16em;
+}
+html[data-palette="zen"] #chapter-title::after {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--md-outline);
+    margin: 14px auto 0;
+}
+
 /* === 預設藍（Google Blue） === */
 :root,
 html[data-palette="default"] {
